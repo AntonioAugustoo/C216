@@ -1,8 +1,3 @@
-"""
-Sistema de Gerenciamento de Alunos - CRUD (AULA 1)
-Permite cadastrar, listar, atualizar e deletar alunos de uma faculdade.
-"""
-
 # Estrutura de dados para armazenar os alunos
 alunos = []
 
