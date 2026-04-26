@@ -1,97 +1,112 @@
-﻿from fastapi import FastAPI, Request
-from pydantic import BaseModel
-import time
+﻿from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
-app = FastAPI()
+app = FastAPI(title="Gerenciador de Alunos")
 
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    start_time = time.time()
-    response = await call_next(request)
-    process_time = time.time() - start_time
-    print(f"{request.method} {request.url.path} - {process_time:.4f}s")
-    return response
+VALID_COURSES = {"GES", "GEC"}
 
 
-class User(BaseModel):
-    name: str
+class AlunoCreate(BaseModel):
+    nome: str = Field(min_length=1)
+    email: EmailStr
+    curso: str
+
+    @field_validator("nome")
+    @classmethod
+    def validate_nome(cls, value: str) -> str:
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("nome nao pode ser vazio")
+        return cleaned
+
+    @field_validator("curso")
+    @classmethod
+    def validate_curso(cls, value: str) -> str:
+        normalized = value.strip().upper()
+        if normalized not in VALID_COURSES:
+            raise ValueError("curso deve ser GES ou GEC")
+        return normalized
 
 
-def normalize_name(value: str) -> str:
-    return value.strip().title()
+class AlunoPatch(BaseModel):
+    nome: str | None = None
+    email: EmailStr | None = None
+
+    @field_validator("nome")
+    @classmethod
+    def validate_nome(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("nome nao pode ser vazio")
+        return cleaned
 
 
-# GET
+alunos: dict[str, dict] = {}
+curso_counters = {"GES": 0, "GEC": 0}
+
+
+def serialize_alunos() -> list[dict]:
+    return [alunos[key] for key in sorted(alunos.keys())]
+
+
 @app.get("/")
-async def hello_world():
-    return {"ok": True, "method": "GET", "message": "API no ar"}
+async def healthcheck():
+    return {"ok": True, "message": "API de alunos no ar"}
 
 
-@app.get("/api/v1/hello")
-async def hello_name_via_query(name: str):
-    clean_name = normalize_name(name)
-    return {
-        "ok": True,
-        "method": "GET",
-        "input": {"name": clean_name, "source": "query"},
-        "message": f"Ola, {clean_name}",
+@app.post("/api/v1/alunos/", status_code=201)
+async def create_aluno(payload: AlunoCreate):
+    curso_counters[payload.curso] += 1
+    matricula = curso_counters[payload.curso]
+    aluno_id = f"{payload.curso}{matricula}"
+
+    aluno = {
+        "id": aluno_id,
+        "nome": payload.nome,
+        "email": payload.email,
+        "curso": payload.curso,
+        "matricula": matricula,
     }
+    alunos[aluno_id] = aluno
+    return aluno
 
 
-@app.get("/api/v1/hello/{name}")
-async def hello_name_via_path(name: str):
-    clean_name = normalize_name(name)
-    return {
-        "ok": True,
-        "method": "GET",
-        "input": {"name": clean_name, "source": "path"},
-        "message": f"Ola, {clean_name}",
-    }
+@app.get("/api/v1/alunos/")
+async def list_alunos():
+    return {"total": len(alunos), "alunos": serialize_alunos()}
 
 
-# POST
-@app.post("/api/v1/hello")
-async def hello_name(user: User):
-    clean_name = normalize_name(user.name)
-    return {
-        "ok": True,
-        "method": "POST",
-        "input": {"name": clean_name},
-        "message": f"Cadastro recebido para {clean_name}",
-    }
+@app.get("/api/v1/alunos/{aluno_id}")
+async def get_aluno(aluno_id: str):
+    aluno = alunos.get(aluno_id)
+    if not aluno:
+        raise HTTPException(status_code=404, detail="aluno nao encontrado")
+    return aluno
 
 
-# PUT
-@app.put("/api/v1/update")
-async def user_update(user: User):
-    clean_name = normalize_name(user.name)
-    return {
-        "ok": True,
-        "method": "PUT",
-        "input": {"name": clean_name},
-        "message": f"Registro atualizado para {clean_name}",
-    }
+@app.patch("/api/v1/alunos/{aluno_id}")
+async def patch_aluno(aluno_id: str, payload: AlunoPatch):
+    aluno = alunos.get(aluno_id)
+    if not aluno:
+        raise HTTPException(status_code=404, detail="aluno nao encontrado")
+
+    update_data = payload.model_dump(exclude_unset=True)
+    aluno.update(update_data)
+    return aluno
 
 
-# DELETE
-@app.delete("/api/v1/delete")
-async def delete_user_by_name(name: str):
-    clean_name = normalize_name(name)
-    return {
-        "ok": True,
-        "method": "DELETE",
-        "input": {"name": clean_name},
-        "message": f"Registro removido: {clean_name}",
-    }
+@app.delete("/api/v1/alunos/{aluno_id}")
+async def delete_aluno(aluno_id: str):
+    if aluno_id not in alunos:
+        raise HTTPException(status_code=404, detail="aluno nao encontrado")
+    deleted = alunos.pop(aluno_id)
+    return {"deleted": True, "aluno": deleted}
 
 
-# PATCH
-@app.patch("/api/v1/patch")
-async def patch_user(user: User):
-    clean_name = normalize_name(user.name)
-    return {
-        "ok": True,
-        "method": "PATCH",
-        "input": {"name": clean_name},
-        "message": f"Atualizacao parcial aplicada em {clean_name}",
-    }
+@app.delete("/api/v1/alunos/")
+async def reset_alunos():
+    deleted_count = len(alunos)
+    alunos.clear()
+    return {"deleted": True, "total_removidos": deleted_count}
