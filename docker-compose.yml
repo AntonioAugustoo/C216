@@ -10,29 +10,30 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./app/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   api:
-    image: c216-api
-    build: .
+    build: ./backend
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
     environment:
       - DATABASE_URL=postgresql://alunos_user:alunos_password@db:5432/alunos_db
     depends_on:
       - db
 
   tests:
-    image: c216-api
-    build: .
-    volumes:
-      - .:/app
+    build: ./backend
     command: pytest tests/ -v
     depends_on:
       - db
+
+  frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
 
 volumes:
   postgres_data:

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set active = 'home' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<main class="hero">
+  <p class="hero-tag">sistemas distribuídos</p>
+  <h1>Frontend com <em>Flask</em></h1>
+  <p>
+    Projeto desenvolvido para a disciplina C216 — Laboratório de Sistemas Distribuídos.
+    Esta aplicação demonstra o uso do Flask para servir páginas HTML estáticas em ambiente containerizado.
+  </p>
+</main>
+
+<section class="cards">
+  <div class="card">
+    <div class="card-icon">🐍</div>
+    <h3>Flask</h3>
+    <p>Micro-framework Python para servir templates HTML via rotas simples e diretas.</p>
+  </div>
+  <div class="card">
+    <div class="card-icon">🐳</div>
+    <h3>Docker</h3>
+    <p>Container isolado para o frontend, orquestrado junto ao backend via Docker Compose.</p>
+  </div>
+  <div class="card">
+    <div class="card-icon">🎓</div>
+    <h3>C216 — Inatel</h3>
+    <p>Laboratório de Sistemas Distribuídos. Antonio Augusto, matrícula 221.</p>
+  </div>
+</section>
+
+{% endblock %}

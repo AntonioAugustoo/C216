@@ -1,7 +1,7 @@
 ﻿from fastapi import FastAPI
-from app.routes.aluno_routes import router as aluno_router
-from app.middlewares.logging import log_requests
-from app.middlewares.custom_header import add_custom_header
+from routes.aluno_routes import router as aluno_router
+from middlewares.logging import log_requests
+from middlewares.custom_header import add_custom_header
 
 app = FastAPI(
     title="Gerenciador de Alunos",

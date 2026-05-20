@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas.aluno import Aluno, AlunoCreate, AlunoPatch
-from app.services.aluno_service import AlunoService
+from schemas.aluno import Aluno, AlunoCreate, AlunoPatch
+from services.aluno_service import AlunoService
 
 router = APIRouter(prefix="/api/v1", tags=["alunos"])
 service = AlunoService()

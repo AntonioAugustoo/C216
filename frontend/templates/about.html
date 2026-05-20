@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% set active = 'about' %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+
+<main class="page">
+  <p class="page-label">sobre</p>
+  <h1>Sobre o Projeto</h1>
+
+  <div class="info-block">
+    <div class="info-block-header">aluno</div>
+    <div class="info-row">
+      <span class="info-key">nome</span>
+      <span class="info-val">Antonio Augusto</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">matrícula</span>
+      <span class="info-val accent">221</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">instituição</span>
+      <span class="info-val">Inatel — Instituto Nacional de Telecomunicações</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">disciplina</span>
+      <span class="info-val">C216 — Laboratório de Sistemas Distribuídos</span>
+    </div>
+  </div>
+
+  <div class="info-block">
+    <div class="info-block-header">sobre a aplicação</div>
+    <div class="info-row">
+      <span class="info-key">framework</span>
+      <span class="info-val accent">Flask</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">linguagem</span>
+      <span class="info-val">Python 3.10</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">infraestrutura</span>
+      <span class="info-val">Docker + Docker Compose</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">porta</span>
+      <span class="info-val green">3000</span>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% set active = 'contact' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+
+<main class="page">
+  <p class="page-label">contato</p>
+  <h1>Informações de Contato</h1>
+
+  <div class="info-block">
+    <div class="info-block-header">contato pessoal</div>
+    <div class="info-row">
+      <span class="info-key">nome</span>
+      <span class="info-val">Antonio Augusto</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">e-mail</span>
+      <span class="info-val accent">antonio.augusto@ges.inatel.br</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">telefone</span>
+      <span class="info-val">(35) 99999-0221</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">localização</span>
+      <span class="info-val">Santa Rita do Sapucaí, MG</span>
+    </div>
+  </div>
+
+  <div class="info-block">
+    <div class="info-block-header">links</div>
+    <div class="info-row">
+      <span class="info-key">github</span>
+      <span class="info-val accent">https://github.com/AntonioAugustoo</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">linkedin</span>
+      <span class="info-val">www.linkedin.com/in/antonioaugustodassumpcao</span>
+    </div>
+  </div>
+
+  <div class="info-block">
+    <div class="info-block-header">disponibilidade</div>
+    <div class="info-row">
+      <span class="info-key">horário</span>
+      <span class="info-val">seg–sex, 09h–18h</span>
+    </div>
+    <div class="info-row">
+      <span class="info-key">resposta</span>
+      <span class="info-val green">em até 24h</span>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

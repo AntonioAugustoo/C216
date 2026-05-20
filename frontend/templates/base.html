@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}C216{% endblock %} — Antonio Augusto</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+  <header>
+    <span class="logo">c216<span>/lab</span></span>
+    <nav>
+      <a href="/" {% if active == 'home' %}class="active"{% endif %}>home</a>
+      <a href="/about" {% if active == 'about' %}class="active"{% endif %}>about</a>
+      <a href="/contact" {% if active == 'contact' %}class="active"{% endif %}>contact</a>
+    </nav>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    Antonio Augusto &mdash; Matrícula 221 &mdash; Inatel C216
+  </footer>
+
+</body>
+</html>

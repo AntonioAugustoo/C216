@@ -1,5 +1,5 @@
-from app.db.connection import get_connection
-from app.schemas.aluno import Aluno, AlunoCreate
+from db.connection import get_connection
+from schemas.aluno import Aluno, AlunoCreate
 
 
 class AlunoService:
